@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="mm.pp.ping.aaadddfgh.ping.vm.MainActivity">
+    <item
+        android:id="@+id/action_go_ping"
+        android:orderInCategory="100"
+        android:title="ping测试"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_go_tcp"
+        android:orderInCategory="101"
+        android:title="网络测试"
+        app:showAsAction="never"
+         />
+</menu>
