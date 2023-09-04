@@ -36,7 +36,10 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint='ip address'
-            android:singleLine="true" />
+            android:singleLine="true"
+            >\
+
+        </EditText>
 
         <Switch
             android:id="@+id/pingv6"
@@ -48,7 +51,8 @@
             android:id="@+id/testButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ping" />
+            android:text="ping"
+            app:backgroundTint="@drawable/btn_color" />
 
         <Space
             android:layout_width="match_parent"

@@ -31,9 +31,11 @@ public class PingFragment extends Fragment {
 
     private boolean v6=false;
 
+
     public PingFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -51,12 +53,20 @@ public class PingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
+        if (getArguments() != null) {
+
 //            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+        }
 
 
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        final EditText ipEditText = getView().findViewById(R.id.editTextIPAddr);
+        outState.putString("IP_ADDR",ipEditText.getText().toString());
+        super.onSaveInstanceState(outState);
 
     }
 
@@ -64,6 +74,7 @@ public class PingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_ping, container, false);
     }
 
@@ -74,6 +85,14 @@ public class PingFragment extends Fragment {
         final Button button = getView().findViewById(R.id.testButton);
         final Switch sw = getView().findViewById(R.id.pingv6);
 
+        //恢复IP
+        if(savedInstanceState!=null) {
+            String ipAddr = savedInstanceState.getString("IP_ADDR");
+            if (ipAddr != null) {
+                ipEditText.setText(ipAddr);
+
+            }
+        }
         sw.setOnCheckedChangeListener((v,useV6)->{
             v6=useV6;
         });

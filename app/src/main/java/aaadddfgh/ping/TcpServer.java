@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TcpServer {
-    static StringBuffer stringBuffer=new StringBuffer();
+    static StringBuilder stringBuilder =new StringBuilder();
     static Boolean running=true;
 
     public static Socket clientSocket;
@@ -19,58 +19,61 @@ public class TcpServer {
         //int port = 12345; // 服务器监听的端口号
 
         try {
-            //SocketAddress saEndPoint = new InetSocketAddress("0.0.0.0", port);
-            serverSocket = new ServerSocket(port);
-            //serverSocket.bind(saEndPoint);
-            //SocketAddress saEndPoint = new InetSocketAddress("10.0.2.15", port);
-            //serverSocket.bind(saEndPoint);
 
-            stringBuffer.append("Server started, listening on port " + port+" ip:"+serverSocket.getInetAddress());
-            string.postValue(stringBuffer.toString());
+            serverSocket = new ServerSocket(port);
+
+
+            stringBuilder.append("Server started, listening on port " + port+" ip:"+serverSocket.getInetAddress());
+            string.postValue(stringBuilder.toString());
 
 
             while (running) {
                 // 监听客户端连接
                 clientSocket = serverSocket.accept();
 
-                stringBuffer.append("\nClient connected: " + clientSocket.getInetAddress().getHostAddress());
-                string.postValue(stringBuffer.toString());
+                stringBuilder.append("\nClient connected: " + clientSocket.getInetAddress().getHostAddress());
+                string.postValue(stringBuilder.toString());
                 // 创建新线程处理客户端请求
                 try {
                     // 获取输入流和输出流
                     BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     OutputStream outputStream = clientSocket.getOutputStream();
 
-                    // 接收客户端的请求
-                    String request = reader.readLine();
-                    stringBuffer.append("\nReceived from client: " + request);
 
-                    // 处理请求并发送响应
+                    //ip信息
+                    stringBuilder.append("\nIP from client: " + clientSocket.getInetAddress());
+
+                    // 接收客户端信息
+                    String request = reader.readLine();
+                    stringBuilder.append("\nReceived from client: " + request);
+
+
+                    // 向客户端送信息
                     String response = "niu\n"; // 服务器响应消息
                     outputStream.write(response.getBytes());
                     outputStream.flush();
-                    stringBuffer.append("\nSent to client: " + response);
+                    stringBuilder.append("\nSent to client: " + response);
 
                     // 关闭连接
                     if(!clientSocket.isClosed())
                         clientSocket.close();
 
                 } catch (IOException e) {
-                    stringBuffer.append("\n"+e.toString());
+                    stringBuilder.append("\n"+e.toString());
                     //string.postValue(stringBuffer.toString());
                 }
 
-                string.postValue(stringBuffer.toString());
+                string.postValue(stringBuilder.toString());
             }
 
 
         } catch (IOException e) {
-            stringBuffer.append("\n"+e.toString());
-            string.postValue(stringBuffer.toString());
+            stringBuilder.append("\n"+e.toString());
+            string.postValue(stringBuilder.toString());
         }
         finally {
 
-            string.postValue(stringBuffer.toString());
+            string.postValue(stringBuilder.toString());
         }
     }
 
@@ -90,20 +93,20 @@ public class TcpServer {
 
                 // 接收客户端的请求
                 String request = reader.readLine();
-                stringBuffer.append("\nReceived from client: " + request);
+                stringBuilder.append("\nReceived from client: " + request);
 
                 // 处理请求并发送响应
                 String response = "niu\n"; // 服务器响应消息
                 outputStream.write(response.getBytes());
                 outputStream.flush();
-                stringBuffer.append("\nSent to client: " + response);
+                stringBuilder.append("\nSent to client: " + response);
 
                 // 关闭连接
                 if(!clientSocket.isClosed())
                     clientSocket.close();
 
             } catch (IOException e) {
-                stringBuffer.append("\n"+e.toString());
+                stringBuilder.append("\n"+e.toString());
                 //string.postValue(stringBuffer.toString());
             }
         }

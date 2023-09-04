@@ -2,6 +2,7 @@ package aaadddfgh.ping;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -23,11 +24,11 @@ import mm.pp.ping.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TestTCP#newInstance} factory method to
+ * Use the {@link TestTCPFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 
-public class TestTCP extends Fragment {
+public class TestTCPFragment extends Fragment {
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,7 +40,7 @@ public class TestTCP extends Fragment {
 
     Socket socket;
 
-    public TestTCP() {
+    public TestTCPFragment() {
         // Required empty public constructor
     }
 
@@ -50,22 +51,33 @@ public class TestTCP extends Fragment {
      * @return A new instance of fragment TestNetwork.
      */
 
-    public static TestTCP newInstance() {
-        TestTCP fragment = new TestTCP();
+    public static TestTCPFragment newInstance() {
+        TestTCPFragment fragment = new TestTCPFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         final EditText ipEditText = getView().findViewById(R.id.editTextIPAddr);
         final EditText portEditText = getView().findViewById(R.id.editTextPort);
-        final Button button = getView().findViewById(R.id.testButton);
+        /**
+         * 开始按钮
+         */
+        final Button startButton = getView().findViewById(R.id.testButton);
         final Button stopButton = getView().findViewById(R.id.stopButton);
-        final Switch sw = getView().findViewById(R.id.isReciver);
+        final Switch 作为接收者 = getView().findViewById(R.id.isReciver);
         final EditText editText=getView().findViewById(R.id.editTextTextMultiLine);
+
+        if(savedInstanceState!=null) {
+            String ipAddr = savedInstanceState.getString("IP_ADDR");
+            if (ipAddr != null) {
+                ipEditText.setText(ipAddr);
+
+            }
+        }
 
         data.observe(getViewLifecycleOwner(),(str)->{
             editText.setText(str);
@@ -75,7 +87,7 @@ public class TestTCP extends Fragment {
         rec.observe(getViewLifecycleOwner(),(b)->{
             if(b){
                 ((MainActivity)getActivity()).showDialog(stringBuffer.toString());
-                button.setEnabled(true);
+                startButton.setEnabled(true);
                 rec.setValue(false);
             }
 
@@ -83,7 +95,7 @@ public class TestTCP extends Fragment {
 
         stopButton.setEnabled(false);
 
-        sw.setOnCheckedChangeListener((v,b)->{
+        作为接收者.setOnCheckedChangeListener((v,b)->{
             isReciver=b;
             if(b){
                 ipEditText.setEnabled(false);
@@ -92,7 +104,7 @@ public class TestTCP extends Fragment {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 data.setValue("");
@@ -102,14 +114,14 @@ public class TestTCP extends Fragment {
 
                 if (isReciver) {
 
-                    button.setEnabled(false);
+                    startButton.setEnabled(false);
 
-                    tcpSer(Integer.valueOf(portEditText.getText().toString()));
+                    startTcpServer(Integer.valueOf(portEditText.getText().toString()));
 
                     stopButton.setEnabled(true);
                 }
                 else {
-                    button.setEnabled(false);
+                    startButton.setEnabled(false);
                     tcpClient(ipEditText.getText().toString(),portEditText.getText().toString());
                 }
             }
@@ -136,12 +148,13 @@ public class TestTCP extends Fragment {
                 //StringBuffer stringBuffer=new StringBuffer(200);
 
                 //tcp(ipEditText.getText().toString(),portEditText.getText().toString());
-                button.setEnabled(true);
+                startButton.setEnabled(true);
                 stopButton.setEnabled(false);
             }
         });
-
     }
+
+
 
     private void tcpClient(String ip,String port){
         String serverIP = ip; // 服务器IP地址
@@ -152,7 +165,7 @@ public class TestTCP extends Fragment {
             try {
                 // 创建Socket对象并连接服务器
                 socket = new Socket(serverIP, serverPort);
-                socket.setSoTimeout(20000);
+                socket.setSoTimeout(8000);
 
                 // 获取输入流和输出流
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -183,7 +196,7 @@ public class TestTCP extends Fragment {
 
     Thread serv;
 
-    private void tcpSer(Integer port){
+    private void startTcpServer(Integer port){
         serv = new Thread(() -> {
             TcpServer.main(port,data);
         });
@@ -201,7 +214,7 @@ public class TestTCP extends Fragment {
     public void onStop() {
         super.onStop();
         try {
-            if(!socket.isClosed())
+            if(socket!=null&&!socket.isClosed())
                 socket.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         pingFragment= PingFragment.newInstance();
-        tcpFragment=TestTCP.newInstance();
+        tcpFragment= TestTCPFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
             .add(
                 R.id.main_content,

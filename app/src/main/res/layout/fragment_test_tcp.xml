@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="aaadddfgh.ping.TestTCP">
+    tools:context="aaadddfgh.ping.TestTCPFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,13 +69,15 @@
                 android:id="@+id/testButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="开始" />
+                android:text="开始"
+                app:backgroundTint="@drawable/btn_color" />
 
             <Button
                 android:id="@+id/stopButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="终止" />
+                android:text="终止"
+                app:backgroundTint="@drawable/btn_color" />
 
             <Space
                 android:layout_width="wrap_content"
